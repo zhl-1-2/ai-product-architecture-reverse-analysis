@@ -1,0 +1,6 @@
+interface:
+  display_name: "AI 产品架构逆向分析"
+  short_description: "从真实证据还原AI产品架构并交付一份完整HTML报告"
+  default_prompt: "使用 $ai-product-architecture-reverse-analysis，识别产品领域，基于我提供的页面和操作证据完成通用 AI 产品架构拆解，最终只交付一份内容完整、可筛选、可复制图源码、可导出和可追溯的单文件 HTML 报告。"
+policy:
+  allow_implicit_invocation: true
