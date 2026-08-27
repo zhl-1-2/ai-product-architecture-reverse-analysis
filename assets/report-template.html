@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' data:; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: file:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>{{PRODUCT_NAME}}·AI 产品架构逆向分析</title>
+  <style>
+    :root{--bg:#f5f7fb;--paper:#fff;--ink:#182230;--muted:#637083;--line:#dce2eb;--brand:#3157d5;--confirmed:#0b7a53;--inferred:#a76600;--suggested:#6d4bc3;--unknown:#68707c;--danger:#b43a3a;--radius:14px}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.65 system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}a{color:var(--brand)}button,input{font:inherit}.page{max-width:1480px;margin:auto;padding:24px}.hero,.section{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);box-shadow:0 8px 28px rgba(31,48,86,.06)}.hero{padding:32px;margin-bottom:18px}.eyebrow{color:var(--brand);font-weight:700;letter-spacing:.05em}.headline{max-width:950px}.meta,.legend,.actions,.filters,.diagram-actions{display:flex;gap:8px;flex-wrap:wrap}.chip,.level{display:inline-flex;align-items:center;padding:3px 9px;border-radius:999px;border:1px solid currentColor;font-size:12px}.confirmed{color:var(--confirmed)}.inferred{color:var(--inferred)}.suggested{color:var(--suggested)}.unknown{color:var(--unknown)}.toolbar{position:sticky;top:0;z-index:10;background:rgba(245,247,251,.95);backdrop-filter:blur(10px);padding:10px 0}.toolbar-inner{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.toolbar input{min-width:260px;flex:1;padding:9px 12px;border:1px solid var(--line);border-radius:9px;background:#fff}.btn{padding:8px 11px;border:1px solid var(--line);border-radius:9px;background:#fff;color:var(--ink);cursor:pointer}.btn:hover,.btn[aria-pressed="true"]{border-color:var(--brand);color:var(--brand);background:#f0f4ff}.toc{display:flex;gap:7px;overflow:auto;padding:8px 0 12px}.toc a{white-space:nowrap;text-decoration:none;border:1px solid var(--line);background:#fff;padding:5px 9px;border-radius:8px;font-size:13px}.section{padding:26px;margin:18px 0;scroll-margin-top:130px}.section h2{margin-top:0}.section-no{color:var(--brand);font-size:13px;font-weight:800}.callout{border-left:4px solid var(--brand);background:#f4f7ff;padding:12px 15px;border-radius:8px;margin:12px 0}.conflict{border-left-color:var(--danger);background:#fff5f5}.table-wrap,.diagram-render{overflow:auto;border:1px solid var(--line);border-radius:10px;margin:12px 0}table{border-collapse:collapse;width:100%;min-width:780px}th,td{padding:10px 12px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}th{background:#f6f8fc;position:sticky;top:0}tr:last-child td{border-bottom:0}.diagram-render{padding:18px;background:#fff;min-height:140px}.diagram-source{white-space:pre;overflow:auto;background:#111827;color:#e6edf7;padding:16px;border-radius:10px;tab-size:2}.fallback{color:var(--muted);font-size:13px}.hidden-by-filter,.hidden-by-search{display:none!important}.toast{position:fixed;right:20px;bottom:20px;background:#152033;color:#fff;padding:10px 14px;border-radius:9px;opacity:0;pointer-events:none;transition:.2s}.toast.show{opacity:1}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:12px}.card{border:1px solid var(--line);border-radius:10px;padding:14px;break-inside:avoid}.muted{color:var(--muted)}
+    @media(max-width:720px){.page{padding:12px}.hero,.section{padding:18px}.toolbar input{min-width:100%}}
+    @media print{body{background:#fff;font-size:10.5pt}.page{max-width:none;padding:0}.toolbar,.toc,.actions,.filters,.diagram-actions,.no-print{display:none!important}.hero,.section{box-shadow:none;border:0;padding:10px 0;margin:0;break-inside:auto}.card,.callout,.diagram-render,table,pre{break-inside:avoid}.section{page-break-before:auto}a{color:inherit;text-decoration:none}.diagram-source{white-space:pre-wrap;color:#000;background:#f5f5f5}}
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="hero">
+      <div class="eyebrow">AI PRODUCT ARCHITECTURE REVERSE ANALYSIS</div>
+      <h1>{{PRODUCT_NAME}}·完整产品架构拆解</h1>
+      <p class="headline">{{ONE_SENTENCE_ARCHITECTURE}}</p>
+      <div class="meta"><span class="chip">领域 {{DOMAIN}}</span><span class="chip">日期 {{DATE}}</span><span class="chip">版本 {{VERSION}}</span><span class="chip">证据 {{EVIDENCE_COUNT}}</span></div>
+      <div class="legend" aria-label="证据等级图例"><span class="level confirmed">已确认</span><span class="level inferred">合理推断</span><span class="level suggested">建议设计</span><span class="level unknown">未知</span></div>
+    </header>
+
+    <div class="toolbar no-print"><div class="toolbar-inner">
+      <input id="report-search" type="search" placeholder="搜索结论、证据、Agent、工具或实体" aria-label="搜索报告">
+      <div class="filters" aria-label="证据等级筛选"><button class="btn" data-filter="all" aria-pressed="true">全部</button><button class="btn" data-filter="confirmed">已确认</button><button class="btn" data-filter="inferred">合理推断</button><button class="btn" data-filter="suggested">建议设计</button><button class="btn" data-filter="unknown">未知</button></div>
+      <button class="btn" id="print-report">打印 / 另存 PDF</button>
+    </div></div>
+
+    <nav class="toc" aria-label="报告目录">
+      <a href="#executive-summary">01 摘要</a><a href="#scope-gaps">02 范围</a><a href="#evidence-index">03 证据</a><a href="#user-journey">04 旅程</a><a href="#functional-domains">05 功能域</a><a href="#agent-contracts">06 Agent</a><a href="#tools-context-dataflow">07 工具/上下文</a><a href="#end-to-end-flows">08 五流</a><a href="#layered-architecture">09 分层</a><a href="#knowledge-assets">10 知识</a><a href="#model-routing">11 模型</a><a href="#technology-options">12 选型</a><a href="#data-entities-er">13 ER</a><a href="#state-sequence">14 状态/时序</a><a href="#panorama">15 全景</a><a href="#as-is-to-be">16 As-Is/To-Be</a><a href="#risks-traceability">17 风险/追溯</a><a href="#unknowns">18 未知</a>
+    </nav>
+
+    <section id="executive-summary" class="section searchable"><div class="section-no">01</div><h2>执行摘要</h2>{{EXECUTIVE_SUMMARY}}</section>
+    <section id="scope-gaps" class="section searchable"><div class="section-no">02</div><h2>查看范围与证据缺口</h2>{{SCOPE_GAPS}}</section>
+    <section id="evidence-index" class="section searchable"><div class="section-no">03</div><h2>证据索引</h2><div class="actions"><button class="btn" data-export-table="evidence-table">导出证据 CSV</button></div>{{EVIDENCE_INDEX}}</section>
+    <section id="user-journey" class="section searchable"><div class="section-no">04</div><h2>用户旅程</h2>{{USER_JOURNEY}}</section>
+    <section id="functional-domains" class="section searchable"><div class="section-no">05</div><h2>核心功能域</h2>{{FUNCTIONAL_DOMAINS}}</section>
+    <section id="agent-contracts" class="section searchable"><div class="section-no">06</div><h2>Agent 清单与 I/O 契约</h2>{{AGENT_CONTRACTS}}</section>
+    <section id="tools-context-dataflow" class="section searchable"><div class="section-no">07</div><h2>工具、全局上下文与数据交接</h2>{{TOOLS_CONTEXT_DATAFLOW}}</section>
+    <section id="end-to-end-flows" class="section searchable"><div class="section-no">08</div><h2>端到端五流</h2>{{END_TO_END_FLOWS}}</section>
+    <section id="layered-architecture" class="section searchable"><div class="section-no">09</div><h2>产品分层架构</h2>{{LAYERED_ARCHITECTURE}}</section>
+    <section id="knowledge-assets" class="section searchable"><div class="section-no">10</div><h2>知识、公共与私有产物</h2>{{KNOWLEDGE_ASSETS}}</section>
+    <section id="model-routing" class="section searchable"><div class="section-no">11</div><h2>模型接入与路由</h2>{{MODEL_ROUTING}}</section>
+    <section id="technology-options" class="section searchable"><div class="section-no">12</div><h2>底层能力与可能选型</h2>{{TECHNOLOGY_OPTIONS}}</section>
+    <section id="data-entities-er" class="section searchable"><div class="section-no">13</div><h2>数据实体与 ER 图</h2>{{DATA_ENTITIES_ER}}</section>
+    <section id="state-sequence" class="section searchable"><div class="section-no">14</div><h2>状态机与端到端时序</h2>{{STATE_SEQUENCE}}</section>
+    <section id="panorama" class="section searchable"><div class="section-no">15</div><h2>产品全景架构</h2>{{PANORAMA}}</section>
+    <section id="as-is-to-be" class="section searchable"><div class="section-no">16</div><h2>As-Is 与 To-Be</h2>{{AS_IS_TO_BE}}</section>
+    <section id="risks-traceability" class="section searchable"><div class="section-no">17</div><h2>关键风险与架构组件追溯</h2><div class="actions"><button class="btn" data-export-table="traceability-table">导出追溯 CSV</button></div>{{RISKS_TRACEABILITY}}</section>
+    <section id="unknowns" class="section searchable"><div class="section-no">18</div><h2>仍然无法确认的问题</h2>{{UNKNOWNS}}</section>
+  </main>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+  <script>
+    (()=>{
+      const toast=document.getElementById('toast');
+      const say=(message)=>{toast.textContent=message;toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),1800)};
+      document.getElementById('print-report').addEventListener('click',()=>window.print());
+      document.querySelectorAll('[data-filter]').forEach(button=>button.addEventListener('click',()=>{
+        const level=button.dataset.filter;
+        document.querySelectorAll('[data-filter]').forEach(item=>item.setAttribute('aria-pressed',String(item===button)));
+        document.querySelectorAll('[data-evidence-level]').forEach(item=>item.classList.toggle('hidden-by-filter',level!=='all'&&item.dataset.evidenceLevel!==level));
+        say(level==='all'?'已显示全部证据':`已筛选：${button.textContent}`);
+      }));
+      document.getElementById('report-search').addEventListener('input',event=>{
+        const term=event.target.value.trim().toLocaleLowerCase('zh-CN');
+        document.querySelectorAll('.searchable,[data-searchable]').forEach(item=>item.classList.toggle('hidden-by-search',Boolean(term)&&!item.textContent.toLocaleLowerCase('zh-CN').includes(term)));
+      });
+      const copyText=async(text,source)=>{try{await navigator.clipboard.writeText(text)}catch(error){const range=document.createRange();range.selectNodeContents(source);const selection=getSelection();selection.removeAllRanges();selection.addRange(range);if(!document.execCommand('copy'))throw error;selection.removeAllRanges()}};
+      document.querySelectorAll('[data-copy-target]').forEach(button=>button.addEventListener('click',async()=>{const source=document.getElementById(button.dataset.copyTarget);if(!source)return say('未找到图源码');try{await copyText(source.textContent,source);say('已复制 Mermaid 源码')}catch(error){say('复制失败，请手动选中源码')}}));
+      document.querySelectorAll('[data-download-target]').forEach(button=>button.addEventListener('click',()=>{const source=document.getElementById(button.dataset.downloadTarget);if(!source)return say('未找到图源码');const blob=new Blob([source.textContent],{type:'text/plain;charset=utf-8'});const link=document.createElement('a');link.href=URL.createObjectURL(blob);link.download=`${button.dataset.downloadTarget.replace(/-source$/,'')}.mmd`;link.click();URL.revokeObjectURL(link.href);say('已下载 Mermaid 源码')}));
+      document.querySelectorAll('[data-export-table]').forEach(button=>button.addEventListener('click',()=>{const table=document.getElementById(button.dataset.exportTable);if(!table)return say('未找到表格');const rows=[...table.querySelectorAll('tr')].filter(row=>getComputedStyle(row).display!=='none');const csv=rows.map(row=>[...row.children].map(cell=>`"${cell.innerText.replace(/"/g,'""').replace(/\r?\n/g,' ')}"`).join(',')).join('\r\n');const blob=new Blob(['\ufeff',csv],{type:'text/csv;charset=utf-8'});const link=document.createElement('a');link.href=URL.createObjectURL(blob);link.download=`${table.id}.csv`;link.click();URL.revokeObjectURL(link.href);say('已导出 CSV')}));
+      if(window.mermaid){mermaid.initialize({startOnLoad:false,securityLevel:'strict',theme:'neutral'});document.querySelectorAll('[data-diagram-id]').forEach(async container=>{const source=document.getElementById(`${container.dataset.diagramId}-source`);if(!source)return;try{const {svg}=await mermaid.render(`${container.dataset.diagramId}-svg`,source.textContent);container.innerHTML=svg}catch(error){container.innerHTML='<p class="fallback">图表渲染失败，请使用下方可复制 Mermaid 源码和相关表格。</p>'}})}
+    })();
+  </script>
+</body>
+</html>
